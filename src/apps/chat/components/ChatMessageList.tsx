@@ -20,6 +20,7 @@ import { SendModeId } from '../Chat';
  */
 export function ChatMessageList(props: {
   conversationId: string | null,
+  messages: DMessage[],
   isMessageSelectionMode: boolean, setIsMessageSelectionMode: (isMessageSelectionMode: boolean) => void,
   onExecuteConversation: (sendModeId: SendModeId, conversationId: string, history: DMessage[]) => void,
   onImagineFromText: (conversationId: string, userText: string) => void,
@@ -30,23 +31,6 @@ export function ChatMessageList(props: {
 
   // external state
  
-  const messages:DMessage[] = [
-    {
-      id: "01",
-      text: "Hello world",
-      sender: 'You',
-    },
-    {
-      id:"02",
-      text: "Hello world2",
-      sender: 'You',
-    },{
-      id:"03",
-      text: "ass",
-      sender:'bot'
-      
-    }
-  ]
 
   const showSystemMessages = useUIPreferencesStore(state => state.showSystemMessages);
 
@@ -70,7 +54,7 @@ export function ChatMessageList(props: {
     props.conversationId && props.onImagineFromText(props.conversationId, messageText);
 
   const handleRestartFromMessage = (messageId: string, offset: number) => {
-    const truncatedHistory = messages.slice(0, messages.findIndex(m => m.id === messageId) + offset + 1);
+    const truncatedHistory = props.messages.slice(0, props.messages.findIndex(m => m.id === messageId) + offset + 1);
     props.conversationId && props.onExecuteConversation('immediate', props.conversationId, truncatedHistory);
   };
 
@@ -80,7 +64,7 @@ export function ChatMessageList(props: {
 
   // hide system messages if the user chooses so
   // NOTE: reverse is because we'll use flexDirection: 'column-reverse' to auto-snap-to-bottom
-  const filteredMessages = messages.filter(m => m.role !== 'system' || true).reverse();
+  const filteredMessages = props.messages.filter(m => m.role !== 'system' || true).reverse();
 
   // when there are no messages, show the purpose selector
   if (!filteredMessages.length)
@@ -99,7 +83,7 @@ export function ChatMessageList(props: {
   const handleSelectAllMessages = (selected: boolean) => {
     const newSelected = new Set<string>();
     if (selected)
-      for (const message of messages)
+      for (const message of props.messages)
         newSelected.add(message.id);
     setSelectedMessages(newSelected);
   };

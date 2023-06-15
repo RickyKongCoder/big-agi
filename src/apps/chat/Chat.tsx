@@ -34,7 +34,7 @@ import { runReActUpdatingState } from './editors/react-tangent';
 const SPECIAL_ID_ALL_CHATS = 'all-chats';
 
 export type SendModeId = 'immediate' | 'react';
-
+// let messages:DMessage[] = 
 
 export function Chat() {
 
@@ -46,7 +46,23 @@ export function Chat() {
   const [publishResponse, setPublishResponse] = React.useState<PasteGG.API.Publish.Response | null>(null);
   const [conversationImportOutcome, setConversationImportOutcome] = React.useState<ImportedOutcome | null>(null);
   const conversationFileInputRef = React.useRef<HTMLInputElement>(null);
-
+  const [messages,setMessageList] = React.useState([
+    {
+      id: "01",
+      text: "Hello world",
+      sender: 'You',
+    },
+    {
+      id:"02",
+      text: "Hello world2",
+      sender: 'You',
+    },{
+      id:"03",
+      text: "ass",
+      sender:'bot'
+      
+    }
+  ]);
   // external state
   const theme = useTheme();
   const { activeConversationId, isConversationEmpty, conversationsCount, importConversation, deleteAllConversations, setMessages, systemPurposeId, setAutoTitle } = useChatStore(state => {
@@ -84,11 +100,16 @@ export function Chat() {
 
   const handleSendUserMessage = async (sendModeId: SendModeId, conversationId: string, userText: string) => {
     const conversation = _findConversation(conversationId);
-    console.log("handle send user message",conversationId,conversation.messages,userText)
-
-      return await handleExecuteConversation(sendModeId, conversationId, [...conversation.messages, createDMessage('user', userText)]);
- 
-    };
+    console.log("handle send user message",conversationId,messages,userText)
+    setMessageList([... messages,{
+      id: messages.length.toString(),
+      text: userText,
+      sender:'You'
+    }]); 
+    console.log("Messages List",messages)
+      
+  
+  };
 
   const handleImagineFromText = async (conversationId: string, messageText: string) => {
     const conversation = _findConversation(conversationId);
@@ -211,6 +232,7 @@ export function Chat() {
       isMessageSelectionMode={isMessageSelectionMode} setIsMessageSelectionMode={setIsMessageSelectionMode}
       onExecuteConversation={handleExecuteConversation}
       onImagineFromText={handleImagineFromText}
+      messages = {messages}
       sx={{
         flexGrow: 1,
         background: theme.vars.palette.background.level2,
@@ -227,6 +249,7 @@ export function Chat() {
         overflowY: 'auto',
         minHeight: 64,
       }} />
+
 
     <Composer
       conversationId={activeConversationId} messageId={null}

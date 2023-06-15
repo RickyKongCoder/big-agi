@@ -182,7 +182,8 @@ export function Composer(props: {
   const handleSendClicked = () => {
     const text = (composeText || '').trim();
     props.onSendMessage(sendModeId, props.conversationId, text);
-    appendSentMessage(text);
+    // appendSentMessage(text);
+    // update the message 
     console.log(sentMessages)
   };
 
