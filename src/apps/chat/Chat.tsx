@@ -66,43 +66,17 @@ export function Chat() {
 
   const handleExecuteConversation = async (sendModeId: SendModeId, conversationId: string, history: DMessage[]) => {
     const { chatLLMId } = useModelsStore.getState();
-    if (!conversationId || !chatLLMId) return;
+    console.log("handleClearConversation")
 
+    console.log(sendModeId)
+
+    if (!conversationId || !chatLLMId) return;
     // Command - last user message is a cmd
     const lastMessage = history.length > 0 ? history[history.length - 1] : null;
     if (lastMessage?.role === 'user') {
-      const pieces = extractCommands(lastMessage.text);
-      if (pieces.length == 2 && pieces[0].type === 'cmd' && pieces[1].type === 'text') {
-        const command = pieces[0].value;
-        const prompt = pieces[1].value;
-        if (CmdRunProdia.includes(command)) {
-          setMessages(conversationId, history);
-          return await runImageGenerationUpdatingState(conversationId, prompt);
-        }
-        if (CmdRunReact.includes(command) && chatLLMId) {
-          setMessages(conversationId, history);
-          return await runReActUpdatingState(conversationId, prompt, chatLLMId);
-        }
-        // if (CmdRunSearch.includes(command))
-        //   return await run...
-      }
+      console.log("user message")
     }
-
-    // synchronous long-duration tasks, which update the state as they go
-    if (sendModeId && chatLLMId && systemPurposeId) {
-      switch (sendModeId) {
-        case 'immediate':
-          return await runAssistantUpdatingState(conversationId, history, chatLLMId, systemPurposeId);
-        case 'react':
-          if (lastMessage?.text) {
-            setMessages(conversationId, history);
-            return await runReActUpdatingState(conversationId, lastMessage.text, chatLLMId);
-          }
-      }
-    }
-
-    // ISSUE: if we're here, it means we couldn't do the job, at least sync the history
-    setMessages(conversationId, history);
+    
   };
 
   const _findConversation = (conversationId: string) =>
@@ -110,9 +84,11 @@ export function Chat() {
 
   const handleSendUserMessage = async (sendModeId: SendModeId, conversationId: string, userText: string) => {
     const conversation = _findConversation(conversationId);
-    if (conversation)
+    console.log("handle send user message",conversationId,conversation.messages,userText)
+
       return await handleExecuteConversation(sendModeId, conversationId, [...conversation.messages, createDMessage('user', userText)]);
-  };
+ 
+    };
 
   const handleImagineFromText = async (conversationId: string, messageText: string) => {
     const conversation = _findConversation(conversationId);
@@ -121,6 +97,7 @@ export function Chat() {
       if (prompt)
         return await handleExecuteConversation('immediate', conversationId, [...conversation.messages, createDMessage('user', `${CmdRunProdia[0]} ${prompt}`)]);
     }
+  
   };
 
 
@@ -239,6 +216,7 @@ export function Chat() {
         background: theme.vars.palette.background.level2,
         overflowY: 'auto', // overflowY: 'hidden'
         minHeight: 96,
+        maxWidth:"50%"
       }} />
 
     <Ephemerals

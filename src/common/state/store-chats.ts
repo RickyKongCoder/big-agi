@@ -59,19 +59,17 @@ const defaultConversations: DConversation[] = [createDConversation()];
  */
 export interface DMessage {
   id: string;
-  text: string;
-  sender: 'You' | 'Bot' | string;   // pretty name
-  avatar: string | null;            // null, or image url
-  typing: boolean;
-  role: 'assistant' | 'system' | 'user';
+  text?: string;
+  sender?: 'You' | 'Bot' | string;   // pretty name
+  avatar?: string | null;            // null, or image url
+  typing?: boolean;
+  role?: 'assistant' | 'system' | 'user';
 
   purposeId?: SystemPurposeId;      // only assistant/system
   originLLM?: string;               // only assistant - model that generated this message, goes beyond known models
-
-  tokenCount: number;               // cache for token count, using the current Conversation model (0 = not yet calculated)
-
-  created: number;                  // created timestamp
-  updated: number | null;           // updated timestamp
+  tokenCount?: number;               // cache for token count, using the current Conversation model (0 = not yet calculated)
+  created?: number;                  // created timestamp
+  updated?: number | null;           // updated timestamp
 }
 
 export function createDMessage(role: DMessage['role'], text: string): DMessage {

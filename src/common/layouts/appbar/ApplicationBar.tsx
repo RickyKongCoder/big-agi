@@ -77,34 +77,30 @@ export function ApplicationBar(props: { sx?: SxProps }) {
       }}>
 
       {/* Application-Menu Button */}
-      <IconButton disabled={!!applicationMenuAnchor || !appMenuItems} variant='plain' onClick={event => setApplicationMenuAnchor(event.currentTarget)}>
+      {/* <IconButton disabled={!!applicationMenuAnchor || !appMenuItems} variant='plain' onClick={event => setApplicationMenuAnchor(event.currentTarget)}>
         <Badge variant='solid' size='sm' badgeContent={appMenuBadge ? appMenuBadge : 0}>
           <MenuIcon />
         </Badge>
-      </IconButton>
+      </IconButton> */}
 
-      {centerItems && <Stack direction='row' sx={{ my: 'auto' }}>
-        {centerItems}
-      </Stack>}
+      {centerItems && 
+      <Stack direction='row' sx={{ my: 'auto', mx:'auto' }}>
+          <div>Search@jpmc</div>
+      </Stack>
+      }
 
       {/* Context-Menu Button */}
-      <IconButton disabled={!!contextMenuAnchor || !contextMenuItems} variant='plain' onClick={event => setContextMenuAnchor(event.currentTarget)}>
+      {/* <IconButton disabled={!!contextMenuAnchor || !contextMenuItems} variant='plain' onClick={event => setContextMenuAnchor(event.currentTarget)}>
         <MoreVertIcon />
-      </IconButton>
+      </IconButton> */}
     </Sheet>
 
 
     {/* Application-Menu Items */}
-    {!!appMenuItems && <Menu
-      variant='plain' color='neutral' size='lg' sx={{ minWidth: 320, maxHeight: 'calc(100dvh - 56px)', overflowY: 'auto' }}
-      open={!!applicationMenuAnchor} anchorEl={applicationMenuAnchor} onClose={closeApplicationMenu}
-      placement='bottom-start' disablePortal={false}
-    >
-      {appMenuItems}
-    </Menu>}
+  
 
     {/* Context-Menu Items */}
-    <Menu
+    {/* <Menu
       variant='plain' color='neutral' size='lg' sx={{ minWidth: 280, maxHeight: 'calc(100dvh - 56px)', overflowY: 'auto' }}
       open={!!contextMenuAnchor} anchorEl={contextMenuAnchor} onClose={closeContextMenu}
       placement='bottom-end' disablePortal={false}
@@ -113,7 +109,7 @@ export function ApplicationBar(props: { sx?: SxProps }) {
       <ListDivider />
       {contextMenuItems}
       <SupportMenuItem />
-    </Menu>
+    </Menu> */}
 
   </>;
 }

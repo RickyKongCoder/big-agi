@@ -136,7 +136,7 @@ export function PurposeSelector(props: { conversationId: string, runExample: (ex
     <Stack direction='column' sx={{ minHeight: '60vh', justifyContent: 'center', alignItems: 'center' }}>
 
       <Box sx={{ maxWidth: bpMaxWidth }}>
-
+{/* 
         <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'baseline', justifyContent: 'space-between', gap: 2, mb: 1 }}>
           <Typography level='body2' color='neutral'>
             Select an AI purpose
@@ -144,7 +144,7 @@ export function PurposeSelector(props: { conversationId: string, runExample: (ex
           <Button variant='plain' color='neutral' size='sm' onClick={toggleEditMode}>
             {editMode ? 'Done' : 'Edit'}
           </Button>
-        </Box>
+        </Box> */}
 
         <Grid container spacing={tileSpacing} sx={{ justifyContent: 'flex-start' }}>
           {purposeIDs.map((spId) => (

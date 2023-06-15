@@ -29,8 +29,28 @@ export function ChatMessageList(props: {
   const [selectedMessages, setSelectedMessages] = React.useState<Set<string>>(new Set());
 
   // external state
+ 
+  const messages:DMessage[] = [
+    {
+      id: "01",
+      text: "Hello world",
+      sender: 'You',
+    },
+    {
+      id:"02",
+      text: "Hello world2",
+      sender: 'You',
+    },{
+      id:"03",
+      text: "ass",
+      sender:'bot'
+      
+    }
+  ]
+
   const showSystemMessages = useUIPreferencesStore(state => state.showSystemMessages);
-  const { messages, editMessage, deleteMessage, historyTokenCount } = useChatStore(state => {
+
+  const { editMessage, deleteMessage, historyTokenCount } = useChatStore(state => {
     const conversation = state.conversations.find(conversation => conversation.id === props.conversationId);
     return {
       messages: conversation ? conversation.messages : [],
@@ -60,13 +80,12 @@ export function ChatMessageList(props: {
 
   // hide system messages if the user chooses so
   // NOTE: reverse is because we'll use flexDirection: 'column-reverse' to auto-snap-to-bottom
-  const filteredMessages = messages.filter(m => m.role !== 'system' || showSystemMessages).reverse();
+  const filteredMessages = messages.filter(m => m.role !== 'system' || true).reverse();
 
   // when there are no messages, show the purpose selector
   if (!filteredMessages.length)
     return props.conversationId ? (
       <Box sx={props.sx || {}}>
-        <PurposeSelector conversationId={props.conversationId} runExample={handleRunExample} />
       </Box>
     ) : null;
 
@@ -93,23 +112,7 @@ export function ChatMessageList(props: {
   };
 
 
-  // scrollbar style
-  // const scrollbarStyle: SxProps = {
-  //   '&::-webkit-scrollbar': {
-  //     md: {
-  //       width: 8,
-  //       background: theme.vars.palette.neutral.plainHoverBg,
-  //     },
-  //   },
-  //   '&::-webkit-scrollbar-thumb': {
-  //     background: theme.vars.palette.neutral.solidBg,
-  //     borderRadius: 6,
-  //   },
-  //   '&::-webkit-scrollbar-thumb:hover': {
-  //     background: theme.vars.palette.neutral.solidHoverBg,
-  //   },
-  // };
-
+ 
   return (
     <List sx={{
       p: 0, ...(props.sx || {}),
@@ -118,18 +121,8 @@ export function ChatMessageList(props: {
       // fix for the double-border on the last message (one by the composer, one to the bottom of the message)
       marginBottom: '-1px',
     }}>
-
+      
       {filteredMessages.map((message, idx) =>
-        props.isMessageSelectionMode ? (
-
-          <ChatMessageSelectable
-            key={'sel-' + message.id} message={message}
-            isBottom={idx === 0} remainingTokens={(chatLLM ? chatLLM.contextTokens : 0) - historyTokenCount}
-            selected={selectedMessages.has(message.id)} onToggleSelected={handleToggleSelected}
-          />
-
-        ) : (
-
           <ChatMessage
             key={'msg-' + message.id} message={message}
             isBottom={idx === 0}
@@ -138,21 +131,9 @@ export function ChatMessageList(props: {
             onMessageRunFrom={(offset: number) => handleRestartFromMessage(message.id, offset)}
             onImagine={handleImagineFromText}
           />
-
-        ),
       )}
 
-      {/* Header at the bottom because of 'row-reverse' */}
-      {props.isMessageSelectionMode && (
-        <MessagesSelectionHeader
-          hasSelected={selectedMessages.size > 0}
-          isBottom={filteredMessages.length === 0}
-          sumTokens={historyTokenCount}
-          onClose={() => props.setIsMessageSelectionMode(false)}
-          onSelectAll={handleSelectAllMessages}
-          onDeleteMessages={handleDeleteSelectedMessages}
-        />
-      )}
+
 
     </List>
   );

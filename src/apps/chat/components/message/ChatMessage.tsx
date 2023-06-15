@@ -247,10 +247,11 @@ export function ChatMessage(props: { message: DMessage, isBottom: boolean, onMes
   const cssCode: SxProps = {
     background: fromAssistant ? theme.vars.palette.background.level1 : theme.vars.palette.primary.softDisabledBg,
     fontFamily: theme.fontFamily.code,
-    fontSize: '14px',
+    fontSize: '30px',
     fontVariantLigatures: 'none',
     lineHeight: 1.75,
-    borderRadius: 'var(--joy-radius-sm)',
+    borderRadius: '40px',
+  
   };
 
   // user message truncation
@@ -268,13 +269,15 @@ export function ChatMessage(props: { message: DMessage, isBottom: boolean, onMes
   return (
     <ListItem sx={{
       display: 'flex', flexDirection: !fromAssistant ? 'row-reverse' : 'row', alignItems: 'flex-start',
-      gap: 1, px: { xs: 1, md: 2 }, py: 2,
+      gap: 5, px: { xs: 1, md: 2}, py: 2,  my:2, ml:(messageSender=='You')? 'auto':0,
       background,
       borderBottom: `1px solid ${theme.vars.palette.divider}`,
       // borderBottomColor: `rgba(${theme.vars.palette.neutral.mainChannel} / 0.2)`,
       position: 'relative',
       ...(props.isBottom && { mb: 'auto' }),
       '&:hover > button': { opacity: 1 },
+      borderRadius:"10px",
+      width:"50%"
     }}>
 
       {/* Avatar */}
@@ -304,112 +307,9 @@ export function ChatMessage(props: { message: DMessage, isBottom: boolean, onMes
 
       </Stack>}
 
+      {messageText}
 
-      {/* Edit / Blocks */}
-      {!isEditing ? (
-
-        <Box sx={{ ...cssBlock, flexGrow: 0 }} onDoubleClick={handleMenuEdit}>
-
-          {fromSystem && wasEdited && (
-            <Typography level='body2' color='warning' sx={{ mt: 1, mx: 1.5 }}>modified by user - auto-update disabled</Typography>
-          )}
-
-          {!errorMessage && parseBlocks(fromSystem, collapsedText).map((block, index) =>
-            block.type === 'html'
-              ? <RenderHtml key={'html-' + index} htmlBlock={block} sx={cssCode} />
-              : block.type === 'code'
-                ? <RenderCode key={'code-' + index} codeBlock={block} sx={cssCode} />
-                : block.type === 'image'
-                  ? <RenderImage key={'image-' + index} imageBlock={block} allowRunAgain={props.isBottom} onRunAgain={handleMenuRunAgain} />
-                  : renderMarkdown
-                    ? <RenderMarkdown key={'text-md-' + index} textBlock={block} />
-                    : <RenderText key={'text-' + index} textBlock={block} />,
-          )}
-
-          {errorMessage && (
-            <Tooltip title={<Typography sx={{ maxWidth: 800 }}>{collapsedText}</Typography>} variant='soft'>
-              <Alert variant='soft' color='warning' sx={{ mt: 1 }}><Typography>{errorMessage}</Typography></Alert>
-            </Tooltip>
-          )}
-
-          {isCollapsed && <Button variant='plain' onClick={handleExpand}>... expand ...</Button>}
-
-          {/* import VisibilityIcon from '@mui/icons-material/Visibility'; */}
-          {/*<br />*/}
-          {/*<Chip variant='outlined' size='lg' color='warning' sx={{ mt: 1, fontSize: '0.75em' }} startDecorator={<VisibilityIcon />}>*/}
-          {/*  BlockAction*/}
-          {/*</Chip>*/}
-
-        </Box>
-
-      ) : (
-
-        <InlineTextarea initialText={messageText} onEdit={handleTextEdited} sx={{ ...cssBlock, lineHeight: 1.75, flexGrow: 1 }} />
-
-      )}
-
-
-      {/* Copy message */}
-      {!fromSystem && !isEditing && (
-        <Tooltip title={fromAssistant ? 'Copy message' : 'Copy input'} variant='solid'>
-          <IconButton
-            variant='outlined' color='neutral' onClick={handleMenuCopy}
-            sx={{
-              position: 'absolute', ...(fromAssistant ? { right: { xs: 12, md: 28 } } : { left: { xs: 12, md: 28 } }), zIndex: 10,
-              opacity: 0, transition: 'opacity 0.3s',
-            }}>
-            <ContentCopyIcon />
-          </IconButton>
-        </Tooltip>
-      )}
-
-
-      {/* Message Operations menu */}
-      {!!menuAnchor && (
-        <Menu
-          variant='plain' color='neutral' size='lg' placement='bottom-end' sx={{ minWidth: 280 }}
-          open anchorEl={menuAnchor} onClose={closeOperationsMenu}>
-          <MenuItem onClick={handleMenuCopy}>
-            <ListItemDecorator><ContentCopyIcon /></ListItemDecorator>
-            Copy
-          </MenuItem>
-          <MenuItem onClick={handleMenuEdit}>
-            <ListItemDecorator><EditIcon /></ListItemDecorator>
-            {isEditing ? 'Discard' : 'Edit'}
-            {!isEditing && <span style={{ opacity: 0.5, marginLeft: '8px' }}> (double-click)</span>}
-          </MenuItem>
-          {isImaginable && isImaginableEnabled && (
-            <MenuItem onClick={handleMenuImagine} disabled={!isImaginableEnabled || isImagining}>
-              <ListItemDecorator>{isImagining ? <CircularProgress size='sm' /> : <FormatPaintIcon />}</ListItemDecorator>
-              Imagine
-            </MenuItem>
-          )}
-          {isSpeakable && (
-            <MenuItem onClick={handleMenuSpeak} disabled={isSpeaking}>
-              <ListItemDecorator>{isSpeaking ? <CircularProgress size='sm' /> : <RecordVoiceOverIcon />}</ListItemDecorator>
-              Speak
-            </MenuItem>
-          )}
-          <ListDivider />
-          {fromAssistant && (
-            <MenuItem onClick={handleMenuRunAgain}>
-              <ListItemDecorator><ReplayIcon /></ListItemDecorator>
-              Retry
-            </MenuItem>
-          )}
-          {fromUser && (
-            <MenuItem onClick={handleMenuRunAgain}>
-              <ListItemDecorator><FastForwardIcon /></ListItemDecorator>
-              Run Again
-            </MenuItem>
-          )}
-          <MenuItem onClick={props.onMessageDelete} disabled={false /*fromSystem*/}>
-            <ListItemDecorator><ClearIcon /></ListItemDecorator>
-            Delete
-          </MenuItem>
-        </Menu>
-      )}
-
+      
     </ListItem>
   );
 }

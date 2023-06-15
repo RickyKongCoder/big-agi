@@ -29,7 +29,7 @@ export const SendModeMenu = (props: { anchorEl: HTMLAnchorElement, sendMode: Sen
     variant='plain' color='neutral' size='md' placement='top-end' sx={{ minWidth: 320, overflow: 'auto' }}
     open anchorEl={props.anchorEl} onClose={props.onClose}>
 
-    <MenuItem color='neutral' selected>Conversation Mode</MenuItem>
+    {/* <MenuItem color='neutral' selected>Conversation Mode</MenuItem> */}
 
     <ListDivider />
 

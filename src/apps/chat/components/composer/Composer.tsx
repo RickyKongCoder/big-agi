@@ -90,12 +90,12 @@ const pasteClipboardLegend =
   </Box>;
 
 
-const MicButton = (props: { variant: VariantProp, color: ColorPaletteProp, onClick: () => void, sx?: SxProps }) =>
-  <Tooltip title='CTRL + M' placement='top'>
-    <IconButton variant={props.variant} color={props.color} onClick={props.onClick} sx={props.sx}>
-      <MicIcon />
-    </IconButton>
-  </Tooltip>;
+// const MicButton = (props: { variant: VariantProp, color: ColorPaletteProp, onClick: () => void, sx?: SxProps }) =>
+//   // <Tooltip title='CTRL + M' placement='top'>
+//   //   {/* <IconButton variant={props.variant} color={props.color} onClick={props.onClick} sx={props.sx}>
+//   //     <MicIcon />
+//   //   </IconButton> */}
+//   // </Tooltip>;
 
 
 const SentMessagesMenu = (props: {
@@ -181,11 +181,9 @@ export function Composer(props: {
 
   const handleSendClicked = () => {
     const text = (composeText || '').trim();
-    if (text.length && props.conversationId) {
-      setComposeText('');
-      props.onSendMessage(sendModeId, props.conversationId, text);
-      appendSentMessage(text);
-    }
+    props.onSendMessage(sendModeId, props.conversationId, text);
+    appendSentMessage(text);
+    console.log(sentMessages)
   };
 
   const handleShowSendMode = (event: React.MouseEvent<HTMLAnchorElement>) => setSendModeMenuAnchor(event.currentTarget);
@@ -385,10 +383,7 @@ export function Composer(props: {
 
   // const prodiaApiKey = isValidProdiaApiKey(useSettingsStore(state => state.prodiaApiKey));
   // const isProdiaConfigured = !requireUserKeyProdia || prodiaApiKey;
-  const textPlaceholder: string = props.isDeveloperMode
-    ? 'Tell me what you need, and drop source files...'
-    : /*isProdiaConfigured ?*/ 'Chat · /react · /imagine · drop text files...' /*: 'Chat · /react · drop text files...'*/;
-
+  const textPlaceholder: string = "Put down your question."
   const isReAct = sendModeId === 'react';
 
   return (
@@ -404,12 +399,12 @@ export function Composer(props: {
             {/*<Typography level='body3' sx={{mb: 2}}>Context</Typography>*/}
 
             {isSpeechEnabled && <Box sx={hideOnDesktop}>
-              <MicButton variant={micVariant} color={micColor} onClick={handleMicClicked} />
+              {/* <MicButton variant={micVariant} color={micColor} onClick={handleMicClicked} /> */}
             </Box>}
 
-            <IconButton variant='plain' color='neutral' onClick={handleShowFilePicker} sx={{ ...hideOnDesktop }}>
+            {/* <IconButton variant='plain' color='neutral' onClick={handleShowFilePicker} sx={{ ...hideOnDesktop }}>
               <UploadFileIcon />
-            </IconButton>
+            </IconButton> */}
             <Tooltip
               variant='solid' placement='top-start'
               title={attachFileLegend}>
@@ -419,9 +414,9 @@ export function Composer(props: {
               </Button>
             </Tooltip>
 
-            <IconButton variant='plain' color='neutral' onClick={handlePasteFromClipboard} sx={{ ...hideOnDesktop }}>
+            {/* <IconButton variant='plain' color='neutral' onClick={handlePasteFromClipboard} sx={{ ...hideOnDesktop }}>
               <ContentPasteGoIcon />
-            </IconButton>
+            </IconButton> */}
             <Tooltip
               variant='solid' placement='top-start'
               title={pasteClipboardLegend}>
@@ -467,7 +462,7 @@ export function Composer(props: {
 
             </Box>
 
-            {isSpeechEnabled && <MicButton variant={micVariant} color={micColor} onClick={handleMicClicked} sx={{ ...hideOnMobile, position: 'absolute', top: 0, right: 0, margin: 1 }} />}
+            {/* {isSpeechEnabled && <MicButton variant={micVariant} color={micColor} onClick={handleMicClicked} sx={{ ...hideOnMobile, position: 'absolute', top: 0, right: 0, margin: 1 }} />} */}
 
             {!!tokenLimit && <TokenBadge directTokens={directTokens} indirectTokens={historyTokens + responseTokens} tokenLimit={tokenLimit} absoluteBottomRight />}
 
@@ -518,11 +513,11 @@ export function Composer(props: {
                   </Button>
                 ) : (
                   <Button
-                    fullWidth variant='solid' color={isReAct ? 'info' : 'primary'} disabled={!props.conversationId || !chatLLM}
-                    onClick={handleSendClicked} onDoubleClick={handleShowSendMode}
+                    fullWidth variant='solid' color={'info'} disabled={false}
+                    onClick={handleSendClicked} 
                     endDecorator={isReAct ? <PsychologyIcon /> : <TelegramIcon />}
                   >
-                    {isReAct ? 'ReAct' : 'Chat'}
+                    Chat
                   </Button>
                 )}
             </Box>
@@ -540,10 +535,6 @@ export function Composer(props: {
         </Grid>
 
 
-        {/* Mode selector */}
-        {!!sendModeMenuAnchor && (
-          <SendModeMenu anchorEl={sendModeMenuAnchor} sendMode={sendModeId} onSetSendMode={setSendModeId} onClose={handleHideSendMode} />
-        )}
 
         {/* Sent messages menu */}
         {!!sentMessagesAnchor && (
